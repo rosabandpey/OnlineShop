@@ -1,4 +1,4 @@
-
+$(document).ready(function() {
 const p=fetch('http://localhost:3000/products');
 const product=$("#product-list");
 
@@ -9,9 +9,10 @@ p.then((response)=>{
 		throw Error(response.status);
 	}
 })
-.then(data => {console.log(data)
+.then(data => {
 	renderProduct(data);
-}).catch((error) => console.log(error));
+})
+.catch((error) => console.log(error));
 
 
 
@@ -49,5 +50,42 @@ function renderProduct(myArray){
 	});
 
 	product.html(questionHtml.join(""));
+	ShoppingCard();
 }
+
+
+//Implementing Shopping Card
+
+function ShoppingCard(){
+
+$("button.add-to-cart").click(function(elem) {
+	
+	renderModal();
+	console.log("test")
+	  });
+
+}
+
+function renderModal(shoppingArray){
+	const shoppingItem=shoppingArray.map(itemCard=>{
+	`
+<div class="list-group-item d-flex justify-content-between align-items-center cart-item">
+<span>عنوان محصول</span>
+<div>
+<button class="btn inc-quantity" data-product-id="ایدی محصول">+</button>
+<span>تعداد محصول برای خرید</span>
+<button class="btn dec-quantity" data-product-id="ایدی محصول">-</button>
+</div>
+</div>
+`;
+});
+const cardLists=$("#cart-list");
+console.log(cardLists)
+cardLists.html(shoppingItem.join(""));
+}
+
+
+});
+
+
 
