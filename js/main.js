@@ -1,10 +1,8 @@
 $(document).ready(function() {
 const p=fetch('http://localhost:3000/products');
 const product=$("#product-list");
-let shoppingArray=[{
-	productValue:[],
-	quantity:0
-}];
+let shoppingArray=[];
+
 var allShoppingcardArray=[{product:{productValue:[],quantity:0}}];
 let quantity=0;
 p.then((response)=>{
@@ -75,10 +73,28 @@ $("button.add-to-cart").click(function(event) {
 
 
 function returnProductByItemId(itemId,myArray){
-
-	 let myShoppingArray=myArray.find(json=>(json.id==itemId));
-	 shoppingArray.push(myShoppingArray);
-	 return shoppingArray;
+	let objShoppingCart={
+		productValue:[],
+		quantity:0
+	}
+	console.log(shoppingArray.length);
+	objShoppingCart.productValue=myArray.find(json=>(json.id==itemId));
+	objShoppingCart.quantity++;
+	shoppingArray.push(objShoppingCart);
+	shoppingArray.forEach((e)=>{
+		if(e.productValue.id){
+			e.quantity++;
+			console.log("yes");
+		}else{
+			console.log("no");
+			
+			objShoppingCart.productValue=myArray.find(json=>(json.id==itemId));
+	        objShoppingCart.quantity++;
+			shoppingArray.push(objShoppingCart);
+		}
+	})
+	
+	return shoppingArray;
 }
 
 function saveProductsToLocalStrorage(shoppingArr){
