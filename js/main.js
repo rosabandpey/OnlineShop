@@ -1,7 +1,12 @@
 $(document).ready(function() {
 const p=fetch('http://localhost:3000/products');
 const product=$("#product-list");
-
+let shoppingArray=[{
+	productValue:[],
+	quantity:0
+}];
+var allShoppingcardArray=[{product:{productValue:[],quantity:0}}];
+let quantity=0;
 p.then((response)=>{
 	if(response.ok){
 		return response.json();
@@ -50,40 +55,55 @@ function renderProduct(myArray){
 	});
 
 	product.html(questionHtml.join(""));
-	ShoppingCard();
+	ShoppingCard(myArray);
 }
 
 
 //Implementing Shopping Card
 
-function ShoppingCard(){
+function ShoppingCard(myArray){
 
-$("button.add-to-cart").click(function(elem) {
-	
-	renderModal();
-	console.log("test")
+$("button.add-to-cart").click(function(event) {
+	let itemId=event.target.getAttribute('data-product-id');
+	returnProductByItemId(itemId,myArray);
+    saveProductsToLocalStrorage(shoppingArray);
+	renderModal(shoppingArray);
+	console.log(itemId);
 	  });
 
 }
 
-function renderModal(shoppingArray){
-	const shoppingItem=shoppingArray.map(itemCard=>{
-	`
+
+function returnProductByItemId(itemId,myArray){
+
+	 let myShoppingArray=myArray.find(json=>(json.id==itemId));
+	 shoppingArray.push(myShoppingArray);
+	 return shoppingArray;
+}
+
+function saveProductsToLocalStrorage(shoppingArr){
+	
+	console.log(shoppingArr);
+}
+
+function renderModal(myArray){
+	const shoppingItem=myArray.map(json=>{
+		return `
 <div class="list-group-item d-flex justify-content-between align-items-center cart-item">
-<span>عنوان محصول</span>
+<span>${json.title}</span>
 <div>
-<button class="btn inc-quantity" data-product-id="ایدی محصول">+</button>
+<button class="btn inc-quantity" data-product-id=${json.id}>+</button>
 <span>تعداد محصول برای خرید</span>
-<button class="btn dec-quantity" data-product-id="ایدی محصول">-</button>
+<button class="btn dec-quantity" data-product-id=${json.id}>-</button>
 </div>
 </div>
 `;
 });
 const cardLists=$("#cart-list");
-console.log(cardLists)
-cardLists.html(shoppingItem.join(""));
-}
+//console.log(cardLists)
+cardLists.html(shoppingItem);
 
+}
 
 });
 
