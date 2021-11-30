@@ -1,10 +1,12 @@
-$(document).ready(function() {
+
 const p=fetch('http://localhost:3000/products');
 const product=$("#product-list");
 let shoppingArray=[];
-
+let myShoppingArray=[];
+let status=false;
 var allShoppingcardArray=[{product:{productValue:[],quantity:0}}];
 let quantity=0;
+let products=[];
 p.then((response)=>{
 	if(response.ok){
 		return response.json();
@@ -20,8 +22,8 @@ p.then((response)=>{
 
 
 
-function renderProduct(myArray){
-	const questionHtml=myArray.map(json=>{
+function renderProduct(products){
+	const questionHtml=products.map(json=>{
 		
 		return `
 		<div class="product col-lg-4 col-md-6 mb-4">
@@ -53,63 +55,78 @@ function renderProduct(myArray){
 	});
 
 	product.html(questionHtml.join(""));
-	ShoppingCard(myArray);
+	ShoppingCard(products);
 }
 
 
 //Implementing Shopping Card
 
-function ShoppingCard(myArray){
+function ShoppingCard(products){
 
 $("button.add-to-cart").click(function(event) {
 	let itemId=event.target.getAttribute('data-product-id');
-	returnProductByItemId(itemId,myArray);
+	shoppingArray=addToCart(itemId,products);
     saveProductsToLocalStrorage(shoppingArray);
 	renderModal(shoppingArray);
 	console.log(itemId);
-	  });
-
-}
-
-
-function returnProductByItemId(itemId,myArray){
-	let objShoppingCart={
-		productValue:[],
-		quantity:0
-	}
-	console.log(shoppingArray.length);
-	objShoppingCart.productValue=myArray.find(json=>(json.id==itemId));
-	objShoppingCart.quantity++;
-	shoppingArray.push(objShoppingCart);
-	shoppingArray.forEach((e)=>{
-		if(e.productValue.id){
-			e.quantity++;
-			console.log("yes");
-		}else{
-			console.log("no");
-			
-			objShoppingCart.productValue=myArray.find(json=>(json.id==itemId));
-	        objShoppingCart.quantity++;
-			shoppingArray.push(objShoppingCart);
-		}
-	})
 	
-	return shoppingArray;
-}
+	  });
+	 
+	}
+
+
+
+
+
+function addToCart(itemId,products){
+	 
+	 
+	 const addedProduct = products.filter(product => product.id == itemId)[0];
+	 const productInCart = shoppingArray.find(item => item.id == itemId);
+
+	 if (productInCart) {
+		return shoppingArray.map(item =>
+		  item.id == itemId ? {...item, quantity: item.quantity + 1} : item
+		);
+	  }
+
+	  return [...shoppingArray, {...addedProduct, quantity: 1}];
+		 
+	 }
+	
+	
+function removeFromCart(itemId,products){
+	 
+		const addedProduct = products.filter(product => product.id == itemId)[0];
+		const productInCart = shoppingArray.find(item => item.id == itemId);
+   
+		if (productInCart) {
+		   return shoppingArray.map(item =>
+			 item.id == itemId ? {...item, quantity: item.quantity -1 } : item
+		   );
+		 }
+   
+		 return [...shoppingArray, {...addedProduct, quantity: 1}];
+		   
+			
+		}
+	   
+
 
 function saveProductsToLocalStrorage(shoppingArr){
+
 	
-	console.log(shoppingArr);
+	console.log(shoppingArr)
 }
 
-function renderModal(myArray){
-	const shoppingItem=myArray.map(json=>{
+function renderModal(products){
+	const shoppingItem=products.map(json=>{
 		return `
 <div class="list-group-item d-flex justify-content-between align-items-center cart-item">
 <span>${json.title}</span>
 <div>
 <button class="btn inc-quantity" data-product-id=${json.id}>+</button>
-<span>تعداد محصول برای خرید</span>
+<span>${json.quantity}</span>
 <button class="btn dec-quantity" data-product-id=${json.id}>-</button>
 </div>
 </div>
@@ -121,7 +138,24 @@ cardLists.html(shoppingItem);
 
 }
 
-});
 
+
+
+
+document.addEventListener("click",function(e){
+
+  if(e.target && e.target.classList.contains('inc-quantity')) {
+	let itemId=e.target.getAttribute('data-product-id');
+	shoppingArray=addToCart(itemId,products);
+	saveProductsToLocalStrorage(shoppingArray);
+	renderModal(shoppingArray);
+  }
+  else if(e.target && e.target.classList.contains('dec-quantity')){
+	let itemId=e.target.getAttribute('data-product-id');
+	shoppingArray=removeFromCart(itemId,products);
+	saveProductsToLocalStrorage(shoppingArray);
+	renderModal(shoppingArray);
+  }
+})
 
 
