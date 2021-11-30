@@ -63,20 +63,6 @@ function renderProduct(products){
 
 function ShoppingCard(products){
 
-$("button.add-to-cart").click(function(event) {
-	let itemId=event.target.getAttribute('data-product-id');
-	shoppingArray=addToCart(itemId,products);
-    saveProductsToLocalStrorage(shoppingArray);
-	renderModal(shoppingArray);
-	console.log(itemId);
-	
-	  });
-	 
-	}
-
-
-
-
 
 function addToCart(itemId,products){
 	 
@@ -155,7 +141,12 @@ document.addEventListener("click",function(e){
 	shoppingArray=removeFromCart(itemId,products);
 	saveProductsToLocalStrorage(shoppingArray);
 	renderModal(shoppingArray);
+  }else if(e.target && e.target.classList.contains('add-to-cart')){
+	let itemId=e.target.getAttribute('data-product-id');
+	shoppingArray=addToCart(itemId,products);
+    saveProductsToLocalStrorage(shoppingArray);
+	renderModal(shoppingArray);
   }
 })
 
-
+}
