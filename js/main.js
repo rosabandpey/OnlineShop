@@ -101,8 +101,13 @@ function removeFromCart(itemId,products){
 
 function saveProductsToLocalStrorage(shoppingArr){
 
-	
-	console.log(shoppingArr)
+  localStorage.setItem("cart",JSON.stringify(shoppingArr));
+
+}
+
+function getFromLocalStorage(){
+	let shoppingArr=localStorage.getItem("cart",);
+	return shoppingArr;
 }
 
 function renderModal(products){
