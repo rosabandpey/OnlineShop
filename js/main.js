@@ -52,12 +52,8 @@ function renderProduct(products){
 	});
 
 	product.html(questionHtml.join(""));
-	//ShoppingCard(products);
+
 }
-
-
-//Implementing Shopping Card
-
 
 
 
@@ -137,8 +133,6 @@ cardLists.html(shoppingItem);
 
 
 
-
-
 document.addEventListener("click",function(e){
 
   if(e.target && e.target.classList.contains('inc-quantity')) {
@@ -162,5 +156,36 @@ document.addEventListener("click",function(e){
 	
   }
 })
+
+
+
+let brandFilter = [];
+
+const brandCheckboxes = document.getElementsByClassName('brand-select');
+
+for (let i = 0; i < brandCheckboxes.length; i++) {
+  brandCheckboxes[i].addEventListener('change', e => {
+    const brandName = e.target.getAttribute('data-brand-name');
+
+    if (e.target.checked) {
+      brandFilter = [...brandFilter, brandName];
+
+      renderProduct(
+        products.filter(product => brandFilter.includes(product.brand))
+      );
+    } else {
+      brandFilter = brandFilter.filter(b => b !== brandName);
+
+      if (brandFilter.length === 0) {
+        renderProduct(products);
+      } else {
+        renderProduct(
+          products.filter(product => brandFilter.includes(product.brand))
+        );
+      }
+    }
+  });
+}
+
 
 
