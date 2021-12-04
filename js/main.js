@@ -132,7 +132,6 @@ cardLists.html(shoppingItem);
 }
 
 
-
 document.addEventListener("click",function(e){
 
   if(e.target && e.target.classList.contains('inc-quantity')) {
@@ -156,8 +155,6 @@ document.addEventListener("click",function(e){
 	
   }
 })
-
-
 
 let brandFilter = [];
 
@@ -186,6 +183,3 @@ for (let i = 0; i < brandCheckboxes.length; i++) {
     }
   });
 }
-
-
-

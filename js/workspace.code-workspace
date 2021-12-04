@@ -1,0 +1,11 @@
+{
+	"folders": [
+		{
+			"name": "OnlineShop",
+			"path": ".."
+		}
+	],
+	"settings": {
+		"liveServer.settings.multiRootWorkspaceName": "random-number"
+	}
+}
